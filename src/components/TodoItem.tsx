@@ -21,6 +21,11 @@ export const TodoItem = ({ todo, onToggle, onDelete, onUpdate }: TodoItemProps) 
     setIsEditing(false);
   };
 
+  const handleCancel = () => {
+    setEditText(todo.text);
+    setIsEditing(false);
+  };
+
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
       handleUpdate();
@@ -57,7 +62,6 @@ export const TodoItem = ({ todo, onToggle, onDelete, onUpdate }: TodoItemProps) 
             type="text"
             value={editText}
             onChange={(e) => setEditText(e.target.value)}
-            onBlur={handleUpdate}
             onKeyDown={handleKeyDown}
             className="w-full px-2 py-1 border border-blue-500 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
             autoFocus
@@ -81,13 +85,41 @@ export const TodoItem = ({ todo, onToggle, onDelete, onUpdate }: TodoItemProps) 
         )}
       </div>
 
-      <button
-        onClick={() => onDelete(todo.id)}
-        className="px-3 py-1 text-sm text-red-600 hover:bg-red-50 rounded transition-colors focus:outline-none focus:ring-2 focus:ring-red-500"
-        aria-label={`${todo.text}を削除`}
-      >
-        削除
-      </button>
+      {isEditing ? (
+        <div className="flex gap-2">
+          <button
+            onClick={handleUpdate}
+            className="px-3 py-1 text-sm text-green-600 hover:bg-green-50 rounded transition-colors focus:outline-none focus:ring-2 focus:ring-green-500"
+            aria-label="変更を保存"
+          >
+            保存
+          </button>
+          <button
+            onClick={handleCancel}
+            className="px-3 py-1 text-sm text-gray-600 hover:bg-gray-50 rounded transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500"
+            aria-label="編集をキャンセル"
+          >
+            キャンセル
+          </button>
+        </div>
+      ) : (
+        <div className="flex gap-2">
+          <button
+            onClick={() => setIsEditing(true)}
+            className="px-3 py-1 text-sm text-blue-600 hover:bg-blue-50 rounded transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
+            aria-label={`${todo.text}を編集`}
+          >
+            編集
+          </button>
+          <button
+            onClick={() => onDelete(todo.id)}
+            className="px-3 py-1 text-sm text-red-600 hover:bg-red-50 rounded transition-colors focus:outline-none focus:ring-2 focus:ring-red-500"
+            aria-label={`${todo.text}を削除`}
+          >
+            削除
+          </button>
+        </div>
+      )}
     </div>
   );
 };
